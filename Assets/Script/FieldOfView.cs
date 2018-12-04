@@ -157,7 +157,6 @@ public class FieldOfView : MonoBehaviour
         return new EdgeInfo(minPoint, maxPoint);
     }
 
-
     //Cheak if raycast it player on FOV
     ViewCastInfo ViewCast(float globalAngle)
     {

@@ -40,21 +40,17 @@ public class FpsController : MonoBehaviour {
                 Eyes.transform.Rotate(-rotY, 0, 0);          
             }
         }
-        else
-        {
-            if(Eyes.transform.localRotation.x >= 0.25)
-            {
+        else {
+            if(Eyes.transform.localRotation.x >= 0.25) {
                 Eyes.transform.localRotation = new Quaternion(0.25f, Eyes.transform.localRotation.y, Eyes.transform.localRotation.z,1);
             }
-            else
-            {
+            else {
                 Eyes.transform.localRotation = new Quaternion(-0.25f, Eyes.transform.localRotation.y, Eyes.transform.localRotation.z, 1);
             }
         }
         /*
          * Methode avec quaternion ou euler mais ne fonctionne pas
-         * 
-         * Vector3 CurrentRot = Eyes.transform.localEulerAngles;
+        Vector3 CurrentRot = Eyes.transform.localEulerAngles;
         Debug.Log(rotY);
         var xRotation = ClampAngle(rotY, CurrentRot.x, -45, 45);
         //CurrentRot.x = xRotation;
@@ -67,7 +63,6 @@ public class FpsController : MonoBehaviour {
         Vector3 movement = new Vector3(moveLR, 0, moveFB);
         movement = transform.rotation * movement * Time.deltaTime;
         player.Move(movement);
-
         //player.transform.Translate(movement * Time.deltaTime); **Autre manière moins fluide**
 
     }
