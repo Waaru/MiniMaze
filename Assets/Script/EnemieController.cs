@@ -11,7 +11,7 @@ public class EnemieController : MonoBehaviour{
 
     //pour pattrouillé
     public List<Transform> Pattern = new List<Transform>();
-    int indexlist;
+    public int indexlist;
     
     //Pour le changement d'etat
     enum etat {idle, pattrouile, attaque};
@@ -27,20 +27,11 @@ public class EnemieController : MonoBehaviour{
 	// Update is called once per frame
 	void Update () {
         if(currentState == etat.idle) {
-            Vector3 direction = (gameObject.transform.localRotation.eulerAngles - transform.position).normalized;
-            Quaternion lookrot = Quaternion.LookRotation(new Vector3(direction.x, 0, direction.z));
-            transform.rotation = Quaternion.Slerp(transform.rotation, lookrot, Time.deltaTime * 2f);
+            StartCoroutine("Idle");
         }
         else if (currentState == etat.pattrouile)
         {
             StartCoroutine("Patrouille", Pattern[indexlist]);
-            if (Vector3.Distance(Pattern[indexlist].transform.position, gameObject.transform.position) <= 2) {
-                currentState = etat.idle;
-                indexlist++;
-            }
-        }
-        else if (currentState == etat.attaque) {
-            CheakIfPlayer();
         }
         
     }
@@ -54,9 +45,24 @@ public class EnemieController : MonoBehaviour{
     //Lors de l'etat pattrouille
     IEnumerator Patrouille(Transform objectif)
     {
+        if (Vector3.Distance(Pattern[indexlist].transform.position, gameObject.transform.position) <= 2)
+        {
+            currentState = etat.idle;
+            if (indexlist + 1 < Pattern.Count) indexlist++;
+            else indexlist = 0;
+        }
         agent.SetDestination(objectif.position);
-        indexlist += 1;
         yield return new WaitForSeconds(5f);
+    }
+
+    //Etat de pause
+    IEnumerator Idle()
+    {
+        Vector3 direction = (gameObject.transform.localRotation.eulerAngles - transform.position).normalized;
+        Quaternion lookrot = Quaternion.LookRotation(new Vector3(direction.x, 0, direction.z));
+        transform.rotation = Quaternion.Slerp(transform.rotation, lookrot, Time.deltaTime * 2f);
+        yield return new WaitForSeconds(2f);
+        currentState = etat.pattrouile;
     }
 
     //Fonction qui cheak si le player est dans le champs de vision
@@ -78,10 +84,6 @@ public class EnemieController : MonoBehaviour{
             {
                 currentState = etat.pattrouile;
             }
-        }
-        else
-        {
-            currentState = etat.pattrouile;
         }
     }
     
