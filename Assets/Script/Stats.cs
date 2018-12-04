@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Stats : MonoBehaviour
 {
@@ -11,7 +12,14 @@ public class Stats : MonoBehaviour
     public float pertinence = 5;
     public void Die()
     {
-        Destroy(gameObject);
+        if(gameObject.tag == "Player")
+        {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
     }
 }
 
