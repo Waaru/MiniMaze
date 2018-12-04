@@ -22,6 +22,8 @@ public class FieldOfView : MonoBehaviour
     public MeshFilter viewMeshFilter;
     Mesh viewMesh;
 
+    public GameObject PlayerTarget;
+
     void Start()
     {
         viewMesh = new Mesh();

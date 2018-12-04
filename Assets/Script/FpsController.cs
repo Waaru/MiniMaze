@@ -13,7 +13,6 @@ public class FpsController : MonoBehaviour {
     float moveLR; //Left and right
 
     float rotX;
-    [Range(-40,40)]
     float rotY;
 
 	// Use this for initialization
@@ -28,15 +27,34 @@ public class FpsController : MonoBehaviour {
 
         rotX = Input.GetAxis("Mouse X") * sensitivity;
         rotY = Input.GetAxis("Mouse Y") * sensitivity;
-
-        Vector3 movement = new Vector3(moveLR, 0, moveFB);
-        transform.Rotate(0, rotX, 0);
-        Eyes.transform.Rotate(-rotY, 0, 0);
         
+        //Mouvement de camera
+        if (Mathf.Abs(rotX) > Mathf.Abs(rotY))
+        {
+            transform.Rotate(0, rotX, 0);
+        }
+        if (Mathf.Abs(rotX) < Mathf.Abs(rotY))
+        {
+            Eyes.transform.Rotate(-rotY, 0, 0);          
+        }
+
+        Vector3 CurrentRot = Eyes.transform.localRotation.eulerAngles;
+        var xRotation = Mathf.Clamp(CurrentRot.x, -45, 45);
+        if (xRotation < 0)
+        {
+            Debug.Log("hello");
+            xRotation = 360 + xRotation; // e.g. 360 + -40 = 320 which is the same rotation
+        }
+        CurrentRot.x = xRotation;
+        Eyes.transform.localRotation = Quaternion.Euler(CurrentRot);
+
+        //Deplacement
+        Vector3 movement = new Vector3(moveLR, 0, moveFB);
         movement = transform.rotation * movement * Time.deltaTime;
         player.Move(movement);
 
         //player.transform.Translate(movement * Time.deltaTime); **Autre manière moins fluide**
 
     }
+    
 }
