@@ -8,8 +8,14 @@ public class EnemieController : MonoBehaviour{
     public float lookRadius = 10f;
     Transform target;
     NavMeshAgent agent;
-    List<Transform> Pattern = new List<Transform>();
+
+    //pour pattrouillé
+    public List<Transform> Pattern = new List<Transform>();
     int indexlist;
+    
+    //Pour le changement d'etat
+    enum etat {idle, pattrouile, attaque};
+    etat currentState;
 
 	// Use this for initialization
 	void Start () {
@@ -20,11 +26,40 @@ public class EnemieController : MonoBehaviour{
 	
 	// Update is called once per frame
 	void Update () {
-        CheakIfPlayer();
-        StartCoroutine("Patrouille", Pattern[indexlist]);
-
+        if(currentState == etat.idle) {
+            Vector3 direction = (gameObject.transform.localRotation.eulerAngles - transform.position).normalized;
+            Quaternion lookrot = Quaternion.LookRotation(new Vector3(direction.x, 0, direction.z));
+            transform.rotation = Quaternion.Slerp(transform.rotation, lookrot, Time.deltaTime * 2f);
+        }
+        else if (currentState == etat.pattrouile)
+        {
+            StartCoroutine("Patrouille", Pattern[indexlist]);
+            if (Vector3.Distance(Pattern[indexlist].transform.position, gameObject.transform.position) <= 2) {
+                currentState = etat.idle;
+                indexlist++;
+            }
+        }
+        else if (currentState == etat.attaque) {
+            CheakIfPlayer();
+        }
+        
     }
 
+    //Verifier en permanence si le joueur est present
+    void FixedUpdate()
+    {
+        CheakIfPlayer();
+    }
+
+    //Lors de l'etat pattrouille
+    IEnumerator Patrouille(Transform objectif)
+    {
+        agent.SetDestination(objectif.position);
+        indexlist += 1;
+        yield return new WaitForSeconds(5f);
+    }
+
+    //Fonction qui cheak si le player est dans le champs de vision
     void CheakIfPlayer()
     {
         float distance = Vector3.Distance(target.position, transform.position);
@@ -37,24 +72,20 @@ public class EnemieController : MonoBehaviour{
                 {
                     PlayerManager.instance.player.GetComponent<Stats>().Die();
                 }
+                currentState = etat.attaque;
+            }
+            else
+            {
+                currentState = etat.pattrouile;
             }
         }
+        else
+        {
+            currentState = etat.pattrouile;
+        }
     }
-
-    IEnumerator Patrouille(Transform objectif)
-    {
-        agent.SetDestination(objectif.position);
-        indexlist += 1;
-        yield return null;
-    }
-
-    IEnumerator Idle(Transform objectif)
-    {
-        agent.SetDestination(objectif.position);
-        indexlist += 1;
-        yield return null;
-    }
-
+    
+    //Une fois dans l'etat de poursuite/attaque , il suit le joueur du regard
     void FaceTarget()
     {
         Vector3 direction = (target.position - transform.position).normalized;
@@ -62,6 +93,7 @@ public class EnemieController : MonoBehaviour{
         transform.rotation = Quaternion.Slerp(transform.rotation, lookrot, Time.deltaTime * 2f);
     }
 
+    //uniquement pour l'editor afin de voir le champ d'action
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.red;
