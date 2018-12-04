@@ -13,7 +13,7 @@ public class FieldOfView : MonoBehaviour
     public LayerMask obstacleMask;
 
     [HideInInspector]
-    public List<Transform> visibleTargets = new List<Transform>();
+    public Transform visibleTargets;
 
     public float meshResolution;
     public int edgeResolveIterations;
@@ -22,7 +22,7 @@ public class FieldOfView : MonoBehaviour
     public MeshFilter viewMeshFilter;
     Mesh viewMesh;
 
-    public GameObject PlayerTarget;
+    public bool seePlayer;
 
     void Start()
     {
@@ -50,7 +50,7 @@ public class FieldOfView : MonoBehaviour
 
     void FindVisibleTargets()
     {
-        visibleTargets.Clear();
+        visibleTargets = null;
         Collider[] targetsInViewRadius = Physics.OverlapSphere(transform.position, viewRadius, targetMask);
 
         for (int i = 0; i < targetsInViewRadius.Length; i++)
@@ -62,8 +62,10 @@ public class FieldOfView : MonoBehaviour
                 float dstToTarget = Vector3.Distance(transform.position, target.position);
                 if (!Physics.Raycast(transform.position, dirToTarget, dstToTarget, obstacleMask))
                 {
-                    visibleTargets.Add(target);
+                    visibleTargets = target;
+                    seePlayer = true;
                 }
+                else seePlayer = false;
             }
         }
     }
@@ -126,7 +128,7 @@ public class FieldOfView : MonoBehaviour
         viewMesh.RecalculateNormals();
     }
 
-
+    //Probablement pas le temps d'en faire plus mais serai utilie pour un feedback player
     EdgeInfo FindEdge(ViewCastInfo minViewCast, ViewCastInfo maxViewCast)
     {
         float minAngle = minViewCast.angle;
@@ -156,6 +158,7 @@ public class FieldOfView : MonoBehaviour
     }
 
 
+    //Cheak if raycast it player on FOV
     ViewCastInfo ViewCast(float globalAngle)
     {
         Vector3 dir = DirFromAngle(globalAngle, true);
@@ -171,6 +174,7 @@ public class FieldOfView : MonoBehaviour
         }
     }
 
+    //Angle de vue donner pour le raycast
     public Vector3 DirFromAngle(float angleInDegrees, bool angleIsGlobal)
     {
         if (!angleIsGlobal)
@@ -180,6 +184,7 @@ public class FieldOfView : MonoBehaviour
         return new Vector3(Mathf.Sin(angleInDegrees * Mathf.Deg2Rad), 0, Mathf.Cos(angleInDegrees * Mathf.Deg2Rad));
     }
 
+    //Will be usefull for Fuzzy Logic
     public struct ViewCastInfo
     {
         public bool hit;
@@ -196,6 +201,7 @@ public class FieldOfView : MonoBehaviour
         }
     }
 
+    //Probablement pas le temps d'en faire plus mais serai utilie pour un feedback player
     public struct EdgeInfo
     {
         public Vector3 pointA;

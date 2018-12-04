@@ -2752,6 +2752,20 @@ MonoBehaviour:
   speed: 2
   sensitivity: 2
   Eyes: {fileID: 534669902}
+--- !u!114 &463156251
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 463156248}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: baf5a4ea74f32214c93116d73908fd16, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  life: 50
+  speed: 4
+  pertinence: 5
 --- !u!4 &463156252 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 400312, guid: 8bf4ca6f6f02d554e9cbb663d10ef7a4,
@@ -4370,7 +4384,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &604545090
 Transform:
   m_ObjectHideFlags: 0
@@ -11991,6 +12005,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   lookRadius: 5
+--- !u!114 &1964508363
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1964508357}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: baf5a4ea74f32214c93116d73908fd16, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  life: 50
+  speed: 4
+  pertinence: 5
 --- !u!1 &2030978545
 GameObject:
   m_ObjectHideFlags: 0
@@ -12006,7 +12034,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &2030978546
 Transform:
   m_ObjectHideFlags: 0
@@ -12039,9 +12067,9 @@ MonoBehaviour:
   obstacleMask:
     serializedVersion: 2
     m_Bits: 512
-  visibleTargets: []
+  visibleTargets: {fileID: 0}
   meshResolution: 1
   edgeResolveIterations: 4
   edgeDstThreshold: 0.5
   viewMeshFilter: {fileID: 604545092}
-  PlayerTarget: {fileID: 0}
+  seePlayer: 0
